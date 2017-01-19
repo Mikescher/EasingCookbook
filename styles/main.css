@@ -1,0 +1,63 @@
+html, body {
+  font-family: 'Roboto', 'Helvetica', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 1.6rem;
+  line-height: 1.2em;
+  font-weight: 300;
+  color: white;
+  background-color: #242424;
+  -webkit-text-size-adjust: 100%;
+}
+
+html { box-sizing: border-box; }
+
+*, *:before, *:after { box-sizing: inherit; }
+
+a {
+  text-decoration: none;
+  color: #3771C8;
+}
+a:hover {
+  color: #3eb159;
+}
+
+h1 {
+  font-size: 4.8rem;
+  margin: 0.5rem auto;
+}
+
+.github-corner:hover .octo-arm { animation: octocat-wave 560ms ease-in-out; }
+@keyframes octocat-wave { 0%, 100% { transform: rotate(0); } 20%, 60% { transform: rotate(-25deg); } 40%, 80% { transform: rotate(10deg); } }
+@media (max-width: 500px) { .github-corner:hover .octo-arm { animation: none; } .github-corner .octo-arm { animation: octocat-wave 560ms ease-in-out; } }
+
+.header {
+  display: flex;
+  justify-content: center;
+
+  margin: 2rem auto 2rem;
+  text-align: center;
+}
+
+.header__title { display: inline-block; vertical-align: middle; width: 44rem; }
+
+.body {
+  display: flex;
+  justify-content: center;
+}
+
+#previewChart {
+  background: white;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: solid #313131;
+}
+
+.chartContainer {
+  width: 800px;
+  height: 800px;
+}
