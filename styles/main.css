@@ -75,7 +75,7 @@ h1 {
     width: 44rem;
 }
 
-.body {
+#body {
 
 }
 
@@ -103,8 +103,11 @@ h1 {
 }
 
 .code {
-    width: 800px;
-    height: 800px;
+    min-width: 800px;
+}
+
+.code > pre {
+    margin: 0;
 }
 
 .hljs {
