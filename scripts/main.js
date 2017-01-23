@@ -5,7 +5,7 @@ let mainChart = new Chart(document.getElementById("previewChart"), {
     type: 'line',
     data: {
         cubicInterpolationMode: 'monotone',
-        datasets: createDataSet("t < .5 ? 0 : 1")
+        datasets: createDataSet(FUNCTIONS[0])
     },
     options: {
         scales: {
@@ -22,24 +22,12 @@ let mainChart = new Chart(document.getElementById("previewChart"), {
     }
 });
 
-appendFunction("FunctionEaseLinear", "t");
-appendFunction("FunctionEaseInQuad", "t * t");
-appendFunction("FunctionEaseInOutQuad", "t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t");
-appendFunction("FunctionEaseInCubic", "t * t * t");
-appendFunction("FunctionEaseOutCubic", "(t - 1) * (t - 1) * (t - 1) + 1");
-appendFunction("FunctionEaseInOutCubic", "t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1");
-appendFunction("FunctionEaseInQuart", "t * t * t * t");
-appendFunction("FunctionEaseOutQuart", "1 - (t - 1) * (t - 1) * (t - 1) * (t - 1)");
-appendFunction("FunctionEaseInOutQuart", "t < .5 ? 8 * t * t * t * t : 1 - 8 * (t - 1) * (t - 1) * (t - 1) * (t - 1)");
-appendFunction("FunctionEaseInQuint", "t * t * t * t * t");
-appendFunction("FunctionEaseOutQuint", "1 + (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1)");
-appendFunction("FunctionEaseInOutQuint", "t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1)");
+FUNCTIONS.forEach(appendFunction);
 
-
-function createDataSet(func) {
+function createDataSet(obj) {
     const RESOLUTION = 1000;
 
-    let compiled = eval('(function (t){return ' + func + ';})')
+    let compiled = eval('(function (t){return ' + obj.f_js + ';})')
 
     let data = [];
 
@@ -48,7 +36,7 @@ function createDataSet(func) {
     }
 
     return [{
-        label: 'return '+func,
+        label: obj.f_es7,
         data: data,
         fill: false,
         borderColor: 'rgba(0, 0, 0, 0.75)',
@@ -57,12 +45,12 @@ function createDataSet(func) {
     }];
 }
 
-function appendFunction(name, func)
+function appendFunction(obj)
 {
     let code = document.createElement("code");
     code.className = "csharp hljs";
 
-    code.innerHTML = "float "+name+"(float t) => "+func+";";
+    code.innerHTML = createCode(obj, "cs");
 
     let pre = document.createElement("pre");
     pre.appendChild(code);
@@ -74,7 +62,7 @@ function appendFunction(name, func)
     code.style.cursor = 'pointer';
     code.onclick = function()
     {
-        mainChart.data.datasets = createDataSet(func);
+        mainChart.data.datasets = createDataSet(obj);
         mainChart.update();
     };
 
@@ -82,5 +70,56 @@ function appendFunction(name, func)
     container.className = "codeContainer";
     container.appendChild(inner);
 
-    document.getElementById("body").appendChild(container);
+    document.getElementById("functionContainer").appendChild(container);
+}
+
+function createCode(obj, lang)
+{
+    if (lang == "cs")
+    {
+        let compact = "float "+obj.Name+"("+createParamList(obj, lang)+") => "+obj.f_cs+";";
+
+        if (compact.length <= 70 && !compact.includes('\n') && !compact.includes('return')) return compact;
+
+        return "float "+obj.Name+"("+createParamList(obj, lang)+")\n{\n"+indentFunc(obj.f_cs)+"\n}"
+    }
+    else if (lang == "js")
+    {
+        let compact = "function "+obj.Name+"("+createParamList(obj, lang)+") { return "+obj.f_js+"; }";
+
+        if (compact.length <= 70 && !compact.includes('\n') && !compact.includes('return')) return compact;
+
+        return "function "+obj.Name+"("+createParamList(obj, lang)+") {\n"+indentFunc(obj.f_js)+"\n}"
+    }
+    else
+    {
+        return "Undefinied"
+    }
+}
+
+function indentFunc(str)
+{
+    if (!str.includes("return")) str = "return "+str+";";
+
+    return str.split('\n').map(s => "    "+s).join("\n");
+}
+
+function createParamList(obj, lang)
+{
+    if (lang == "cs")
+    {
+        let r = ["float t"];
+        let a = obj.Parameters.map(p => (p.length > 1) ? (p[0]+"=" + p[1]) :(p[0]));
+        return [...r, ...a].join(", ")
+    }
+    else if (lang == "js")
+    {
+        let r = ["t"];
+        let a = obj.Parameters.map(p => (p.length > 1) ? (p[0].split(' ')[1]+"=" + p[1]) :(p[0].split(' ')[1]));
+        return [...r, ...a].join(", ")
+    }
+    else
+    {
+        return "Undefinied"
+    }
 }

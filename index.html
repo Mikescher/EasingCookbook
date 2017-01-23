@@ -2,10 +2,13 @@
 <html lang="">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Easing Cookbook</title>
 
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/bootstrap.css">
     <link rel="stylesheet" href="styles/mono-blue.css">
 </head>
 <body>
@@ -18,25 +21,28 @@
     </svg>
 </a>
 
-<div class="header">
-    <h1>Easing Cookbook</h1>
-</div>
+<div class="container">
+    <div id="header_div">
+        <h1>Easing Cookbook</h1>
+    </div>
 
-<div id="body">
-    <div class="chartContainer">
-        <div class="previewChartOuter">
+    <div class="row">
+
+        <div class="col-md-6" id="functionContainer">
+            <!-- ... -->
+        </div>
+
+        <div class="col-md-6 well">
             <canvas id="previewChart"></canvas>
         </div>
     </div>
 
-    <!-- ... -->
-
 </div>
-
 
 <script src="scripts/highlight.pack.js"></script>
 <script src="scripts/moment.js"></script>
 <script src="scripts/chart.js"></script>
+<script src="scripts/definitions.js"></script>
 <script src="scripts/main.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 

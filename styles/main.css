@@ -79,10 +79,6 @@ h1 {
 
 }
 
-.previewChartOuter {
-    width: 800px;
-}
-
 #previewChart {
     background: white;
     -webkit-border-radius: 5px;
@@ -91,23 +87,27 @@ h1 {
     border: solid #313131;
 }
 
-.chartContainer {
-    width: 100%;
-    display:flex;
-    justify-content: center;
-}
-
 .codeContainer {
     display:flex;
     justify-content: center;
 }
 
 .code {
-    min-width: 800px;
+    width: 100%;
+}
+
+.code pre {
+    background-color: transparent;
+    border: none;
 }
 
 .code > pre {
     margin: 0;
+}
+
+#header_div {
+    padding: 40px 15px;
+    text-align: center;
 }
 
 .hljs {
