@@ -1,4 +1,6 @@
 
+var fncDomNode = [];
+
 Chart.defaults.global.animation.duration = 0;
 
 let mainChart = new Chart(document.getElementById("previewChart"), {
@@ -23,6 +25,7 @@ let mainChart = new Chart(document.getElementById("previewChart"), {
 });
 
 FUNCTIONS.forEach(appendFunction);
+
 
 function createDataSet(obj) {
     const RESOLUTION = 1000;
@@ -60,15 +63,20 @@ function appendFunction(obj)
     inner.appendChild(pre);
 
     code.style.cursor = 'pointer';
-    code.onclick = function()
-    {
-        mainChart.data.datasets = createDataSet(obj);
-        mainChart.update();
-    };
 
     let container = document.createElement("div");
     container.className = "codeContainer";
     container.appendChild(inner);
+
+    fncDomNode.push(container);
+
+    code.onclick = function()
+    {
+        fncDomNode.forEach(n => n.classList.remove("selected_func"))
+        mainChart.data.datasets = createDataSet(obj);
+        mainChart.update();
+        container.classList.add("selected_func");
+    };
 
     document.getElementById("functionContainer").appendChild(container);
 }
