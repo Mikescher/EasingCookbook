@@ -2,12 +2,18 @@ var LANGUAGES = ["cs", "js", "es7"]
 
 var HIGHLIGHT_CLASSES = {'cs':'lang-csharp', 'js':'lang-javascript', 'es7':'lang-javascript', }
 
+const RESOLUTION = 1000;
+const FPS = 30;
+const ANIMATION_TIME     = 1500; // ms
+const ANIMATION_COOLDOWN =  500; // ms
+
 var FUNCTIONS =
 [
     {
         "Name": "Custom",
         "Parameters": [],
         "Editable": true,
+        "blob": null,
         "f_js":  "return 0.5; // edit me",
         "f_es7": "UNDEFINIED",
         "f_cs":  "UNDEFINIED",
@@ -16,6 +22,7 @@ var FUNCTIONS =
         "Name": "FunctionJump",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js": "(t < 0.5) ? 0 : 1",
         "f_es7": "(t < 0.5) ? 0 : 1",
         "f_cs": "(t < 0.5) ? 0 : 1",
@@ -24,6 +31,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseLinear",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "t",
         "f_es7": "t",
         "f_cs":  "t",
@@ -32,6 +40,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseInQuad",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "t*t",
         "f_es7": "t**2",
         "f_cs":  "t*t",
@@ -40,6 +49,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseInOutQuad",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "(t<0.5)?(2*t*t):((4-2*t)*t-1)",
         "f_es7": "(t<0.5)?(2*t*t):((4-2*t)*t-1)",
         "f_cs":  "(t<0.5)?(2*t*t):((4-2*t)*t-1)",
@@ -48,6 +58,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseInCubic",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "t*t*t",
         "f_es7": "t**3",
         "f_cs":  "t*t*t",
@@ -56,6 +67,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseOutCubic",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "(t-1)*(t-1)*(t-1)+1",
         "f_es7": "1 + (t-1)**3",
         "f_cs":  "(t-1)*(t-1)*(t-1)+1",
@@ -64,6 +76,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseInOutCubic",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "(t<0.5)?(4*t*t*t):((t-1)*(2*t-2)*(2*t-2)+1)",
         "f_es7": "(t<0.5)?(4*t**3):((t-1)*(2*t-2)**2+1)",
         "f_cs":  "(t<0.5)?(4*t*t*t):((t-1)*(2*t-2)*(2*t-2)+1)",
@@ -72,6 +85,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseInQuart",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "t*t*t*t",
         "f_es7": "t**4",
         "f_cs":  "t*t*t*t",
@@ -80,6 +94,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseOutQuart",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "1-(t-1)*(t-1)*(t-1)*(t-1)",
         "f_es7": "1 - (t-1)**4",
         "f_cs":  "1-(t-1)*(t-1)*(t-1)*(t-1)",
@@ -88,6 +103,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseInOutQuart",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "(t<0.5)?(8*t*t*t*t):(1-8*(t-1)*(t-1)*(t-1)*(t-1))",
         "f_es7": "(t<0.5)?(8 * t**4):(1-8 * (t-1)**4)",
         "f_cs":  "(t<0.5)?(8*t*t*t*t):(1-8*(t-1)*(t-1)*(t-1)*(t-1))",
@@ -104,6 +120,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseOutQuint",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "1+(t-1)*(t-1)*(t-1)*(t-1)*(t-1)",
         "f_es7": "1 + (t-1)**5",
         "f_cs":  "1+(t-1)*(t-1)*(t-1)*(t-1)*(t-1)",
@@ -112,6 +129,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseInOutQuint",
         "Parameters": [],
         "Editable": false,
+        "blob": null,
         "f_js":  "(t<0.5)?(16*t*t*t*t*t):(1+16*(t-1)*(t-1)*(t-1)*(t-1)*(t-1))",
         "f_cs":  "(t<0.5)?(16*t*t*t*t*t):(1+16*(t-1)*(t-1)*(t-1)*(t-1)*(t-1))",
         "f_es7": "(t<0.5)?(16 * t**5):(1+16 * (t-1)**5)",
@@ -120,6 +138,7 @@ var FUNCTIONS =
         "Name": "FunctionEaseOutElastic",
         "Parameters": [["float power", "0.3f"], ["float bounces", "2"]],
         "Editable": false,
+        "blob": null,
         "f_js":  "t *= 0.175 * bounces + 0.0875;\nlet sb = Math.sin((t - power / 4) * (2*Math.PI)/power);\nreturn sb * Math.pow(2, -10 * t) + 1;",
         "f_es7": "t *= 0.175 * bounces + 0.0875;\nlet sb = Math.sin((t - power / 4) * (2*Math.PI)/power);\nreturn sb * Math.pow(2, -10 * t) + 1;",
         "f_cs":  "t *= 0.175f * bounces + 0.0875f;\nvar sb = Math.Sin((t - power / 4) * (2*Math.PI)/power);\nreturn sb * Math.Pow(2, -10 * t) + 1;",

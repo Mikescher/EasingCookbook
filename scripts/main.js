@@ -1,10 +1,15 @@
 
+//=================================================================================================
+
+
 var functionNodeCache = [];
 var currentLanguage = "cs";
+var selectedFuncObj = null;
+var animationStartTicks = new Date().getTime();
 
 Chart.defaults.global.animation.duration = 0;
 
-let mainChart = new Chart(document.getElementById("previewChart"), 
+var mainChart = new Chart(document.getElementById("previewChart"), 
 {
     type: 'line',
     data: { cubicInterpolationMode: 'monotone', datasets: createDataSet(FUNCTIONS[0], []) },
@@ -19,29 +24,32 @@ FUNCTIONS.forEach(appendFunction);
 
 setLang(currentLanguage);
 
+window.setInterval(animate, 1000/FPS)
+
 
 //=================================================================================================
 
 
 function createDataSet(obj, params) 
 {
-    const RESOLUTION = 1000;
-
     let data = [];
 
-    let fnc = '('+createCode(obj, "js")+')';
-    try {
-        let compiled = eval(fnc);
-        
-        
-        for (let i=0; i < RESOLUTION; i++) {
-            data.push({x: i/RESOLUTION, y: compiled.apply(this, [i/RESOLUTION, ...params])});
+    if (obj.blob === null)
+    {
+        let fnc = '('+createCode(obj, "js")+')';
+        try {
+            compiled = eval(fnc);
+        } catch  (e) {
+            console.log(e);
+            console.log(fnc);
+            obj.blob = function(t) { return t; }
         }
-    } catch  (e) {
-        console.log(e);
-        console.log(fnc);
-        data.push({x: 0, y: 0.5});
-        data.push({x: 1, y: 0.5});
+
+        obj.blob = function(t) { return compiled.apply(null, [t, ...params]) };
+    }
+
+    for (let i=0; i < RESOLUTION; i++) {
+        data.push({x: i/RESOLUTION, y: obj.blob(i/RESOLUTION)});
     }
 
     return [{
@@ -75,10 +83,28 @@ function appendFunction(obj)
 
     let updateFunc = function()
     {
+        selectedFuncObj = functionNodeCache.find(o => o.Container === container);
+        
         functionNodeCache.forEach(n => n.Container.classList.remove("selected_func"))
         mainChart.data.datasets = createDataSet(obj, paramNodes.map(n => n.value));
         mainChart.update();
         container.classList.add("selected_func");
+
+        animationStartTicks = new Date().getTime() - ANIMATION_TIME;
+    };
+
+    let updateFuncForce = function()
+    {
+        selectedFuncObj = functionNodeCache.find(o => o.Container === container);
+        
+        selectedFuncObj.blob = null;
+
+        functionNodeCache.forEach(n => n.Container.classList.remove("selected_func"))
+        mainChart.data.datasets = createDataSet(obj, paramNodes.map(n => n.value));
+        mainChart.update();
+        container.classList.add("selected_func");
+
+        animationStartTicks = new Date().getTime() - ANIMATION_TIME;
     };
 
     for(let param of obj.Parameters) {
@@ -113,12 +139,12 @@ function appendFunction(obj)
 
         paramNodes.push(box);
 
-        box.oninput = updateFunc;
+        box.oninput = updateFuncForce;
 
         container.appendChild(subcontainer);
     }
 
-    let editArea;
+    let editArea = null;
 
     if (obj.Editable) {
         let editArea = document.createElement("textarea");
@@ -152,6 +178,7 @@ function appendFunction(obj)
                 inner.classList.remove('common-hidden');
 
                 obj.f_js = editArea.value;
+                obj.blob = null;
 
                 updateNode(obj, code, "js");
                 
@@ -278,9 +305,29 @@ function setLang(l)
     functionNodeCache.forEach(f => updateNode(f.Object, f.CodeNode, l));
 }
 
-function updateNode(obj, codenode, lang) {
+function updateNode(obj, codenode, lang) 
+{
     codenode.className = '';
     codenode.innerHTML = createCode(obj, lang);
     codenode.className = HIGHLIGHT_CLASSES[obj.Editable ? "js" : lang] + ' hljs';
     hljs.highlightBlock(codenode);
+}
+
+var bob = document.getElementById("previewAnimationTranslateBobble");
+var container = document.getElementById("previewAnimationTranslate");
+
+function animate() 
+{
+    if(selectedFuncObj === null) return;
+    if(selectedFuncObj.Object === null) return;
+    if(selectedFuncObj.Object.blob === null) return;
+
+    let now = new Date().getTime();
+    let progress = ((now - animationStartTicks) % (ANIMATION_TIME+ANIMATION_COOLDOWN)) / ANIMATION_TIME;
+
+    if (progress > 1) progress = 0; // cooldown;
+
+    let mp = selectedFuncObj.Object.blob(progress)
+
+    bob.style.left = (5 + (container.offsetWidth - bob.offsetWidth - 10) * mp) + "px";
 }
