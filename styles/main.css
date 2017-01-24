@@ -84,11 +84,19 @@ h1 {
 }
 
 .codeContainer {
-
+    position: relative;
 }
 
 .code {
     width: 100%;
+}
+
+.common-hidden { display:None !important; }
+
+.common-visible {}
+
+.edit-textarea {
+    margin: 9.5px;
 }
 
 .additional_param {
@@ -128,4 +136,10 @@ h1 {
     border-width: 1px;
     border-style: solid;
     border-color: #400 #700 #700 #400;
+}
+
+.function-edit-button {
+    position: absolute;
+    right: 13px;
+    top: 13px;
 }

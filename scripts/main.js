@@ -19,6 +19,10 @@ FUNCTIONS.forEach(appendFunction);
 
 setLang(currentLanguage);
 
+
+//=================================================================================================
+
+
 function createDataSet(obj, params) 
 {
     const RESOLUTION = 1000;
@@ -114,9 +118,75 @@ function appendFunction(obj)
         container.appendChild(subcontainer);
     }
 
+    let editArea;
+
+    if (obj.Editable) {
+        let editArea = document.createElement("textarea");
+        editArea.className="edit-textarea form-control common-hidden";
+        editArea.value = '????';
+        
+        container.appendChild(editArea);
+        
+        let btn = document.createElement("a");
+        btn.className="btn btn-default function-edit-button common-visible";
+        btn.href='#';
+        btn.onclick = () => { return false; };
+        
+        let icon = document.createElement("i");
+        icon.className='icon-pencil'
+        
+        let editTextNode = document.createTextNode('Edit');
+
+        btn.appendChild(icon);
+        btn.appendChild(editTextNode)
+        
+        let expanded = false;
+        btn.onclick = function() {
+            if (expanded) {
+                editTextNode.nodeValue = "Edit";
+
+                editArea.classList.add('common-hidden');
+                editArea.classList.remove('common-visible');
+                
+                inner.classList.add('common-visible');
+                inner.classList.remove('common-hidden');
+
+                obj.f_js = editArea.value;
+
+                updateNode(obj, code, "js");
+                
+                expanded = false;
+
+                updateFunc();
+
+                return false;
+
+            } else {
+                editTextNode.nodeValue = "OK";
+                
+                editArea.value = obj.f_js;
+                editArea.height = code.height;
+                editArea.width = code.width;
+                
+                editArea.classList.remove('common-hidden');
+                editArea.classList.add('common-visible');
+                
+                inner.classList.remove('common-visible');
+                inner.classList.add('common-hidden');
+                
+                expanded = true;
+
+                return false;
+            }
+        }
+
+        container.appendChild(btn);
+
+    }
+
     code.onclick = updateFunc;
 
-    functionNodeCache.push({'Object': obj, 'Container': container, 'ParameterNodes:': paramNodes, 'CodeNode': code});
+    functionNodeCache.push({'Object': obj, 'Container': container, 'ParameterNodes:': paramNodes, 'CodeNode': code, 'EditNode': editArea});
 
     document.getElementById("functionContainer").appendChild(container);
 }
@@ -129,6 +199,8 @@ function cleanDefaultValue(v)
 
 function createCode(obj, lang)
 {
+    if (obj.Editable) lang = "js";
+
     if (lang == "cs")
     {
         let compact = "float "+obj.Name+"("+createParamList(obj, lang)+") => "+obj.f_cs+";";
@@ -203,9 +275,12 @@ function setLang(l)
             child.classList.remove("active");
     }
 
-    functionNodeCache.forEach(f => f.CodeNode.className = '');
-    functionNodeCache.forEach(f => f.CodeNode.innerHTML = createCode(f.Object, l));
-    functionNodeCache.forEach(f => f.CodeNode.className = HIGHLIGHT_CLASSES[l] + ' hljs');
+    functionNodeCache.forEach(f => updateNode(f.Object, f.CodeNode, l));
+}
 
-    functionNodeCache.forEach(f => hljs.highlightBlock(f.CodeNode));
+function updateNode(obj, codenode, lang) {
+    codenode.className = '';
+    codenode.innerHTML = createCode(obj, lang);
+    codenode.className = HIGHLIGHT_CLASSES[obj.Editable ? "js" : lang] + ' hljs';
+    hljs.highlightBlock(codenode);
 }
