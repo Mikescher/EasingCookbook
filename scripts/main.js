@@ -1,15 +1,19 @@
 
 //=================================================================================================
 
+let functionNodeCache = [];
+let currentLanguage = "cs";
+let selectedFuncObj = null;
+let animationStartTicks = new Date().getTime();
 
-var functionNodeCache = [];
-var currentLanguage = "cs";
-var selectedFuncObj = null;
-var animationStartTicks = new Date().getTime();
+let elem_bobAnim  = document.getElementById("PATBobbleAnimation");
+let elem_bobStart = document.getElementById("PATBobbleStart");
+let elem_bobEnd   = document.getElementById("PATBobbleEnd");
+let elem_container = document.getElementById("previewAnimationTranslate");
 
 Chart.defaults.global.animation.duration = 0;
 
-var mainChart = new Chart(document.getElementById("previewChart"), 
+let mainChart = new Chart(document.getElementById("previewChart"),
 {
     type: 'line',
     data: { cubicInterpolationMode: 'monotone', datasets: createDataSet(FUNCTIONS[0], []) },
@@ -24,8 +28,9 @@ FUNCTIONS.forEach(appendFunction);
 
 setLang(currentLanguage);
 
-window.setInterval(animate, 1000/FPS)
+window.setInterval(animate, 1000/FPS);
 
+selectFuncObject(FUNCTIONS[1], true);
 
 //=================================================================================================
 
@@ -38,19 +43,27 @@ function createDataSet(obj, params)
     {
         let fnc = '('+createCode(obj, "js")+')';
         try {
-            compiled = eval(fnc);
+            let compiled = eval(fnc);
+            obj.blob = function(t) { return compiled.apply(null, [t, ...params]) };
         } catch  (e) {
             console.log(e);
             console.log(fnc);
             obj.blob = function(t) { return t; }
         }
 
-        obj.blob = function(t) { return compiled.apply(null, [t, ...params]) };
     }
 
+    let min = 0;
+    let max = 1;
     for (let i=0; i < RESOLUTION; i++) {
-        data.push({x: i/RESOLUTION, y: obj.blob(i/RESOLUTION)});
+        let xx = i/RESOLUTION;
+        let yy = obj.blob(xx);
+        data.push({x: xx, y: yy});
+        min = Math.min(min, yy);
+        max = Math.max(max, yy);
     }
+    obj.min = min;
+    obj.max = max;
 
     return [{
         label: obj.Name,
@@ -81,32 +94,6 @@ function appendFunction(obj)
 
     let paramNodes = [];
 
-    let updateFunc = function()
-    {
-        selectedFuncObj = functionNodeCache.find(o => o.Container === container);
-        
-        functionNodeCache.forEach(n => n.Container.classList.remove("selected_func"))
-        mainChart.data.datasets = createDataSet(obj, paramNodes.map(n => n.value));
-        mainChart.update();
-        container.classList.add("selected_func");
-
-        animationStartTicks = new Date().getTime() - ANIMATION_TIME;
-    };
-
-    let updateFuncForce = function()
-    {
-        selectedFuncObj = functionNodeCache.find(o => o.Container === container);
-        
-        selectedFuncObj.blob = null;
-
-        functionNodeCache.forEach(n => n.Container.classList.remove("selected_func"))
-        mainChart.data.datasets = createDataSet(obj, paramNodes.map(n => n.value));
-        mainChart.update();
-        container.classList.add("selected_func");
-
-        animationStartTicks = new Date().getTime() - ANIMATION_TIME;
-    };
-
     for(let param of obj.Parameters) {
 
         let lbl = document.createElement("span");
@@ -114,9 +101,9 @@ function appendFunction(obj)
         lbl.innerHTML = param[0].split(' ')[1];
 
         let box = document.createElement("input");
-        box.setAttribute('type', 'text')
+        box.setAttribute('type', 'text');
         box.className = "form-control";
-        if (param[1] != "") box.setAttribute('value', cleanDefaultValue(param[1]))
+        if (param[1] != "") box.setAttribute('value', cleanDefaultValue(param[1]));
         box.innerHTML = param[0].split(' ')[1];
 
         let subcontainer = document.createElement("div");
@@ -129,7 +116,7 @@ function appendFunction(obj)
         inputgroup.appendChild(box);
 
         if (param[1] != "" && cleanDefaultValue(param[1]) != param[1]) {
-            let suffix = document.createElement("span")
+            let suffix = document.createElement("span");
             suffix.className = 'input-group-addon';
             suffix.innerHTML = param[1].slice(-1);
             inputgroup.appendChild(suffix);
@@ -139,7 +126,7 @@ function appendFunction(obj)
 
         paramNodes.push(box);
 
-        box.oninput = updateFuncForce;
+        box.oninput = () => selectFuncObject(obj, true);
 
         container.appendChild(subcontainer);
     }
@@ -159,12 +146,12 @@ function appendFunction(obj)
         btn.onclick = () => { return false; };
         
         let icon = document.createElement("i");
-        icon.className='icon-pencil'
+        icon.className='icon-pencil';
         
         let editTextNode = document.createTextNode('Edit');
 
         btn.appendChild(icon);
-        btn.appendChild(editTextNode)
+        btn.appendChild(editTextNode);
         
         let expanded = false;
         btn.onclick = function() {
@@ -178,16 +165,14 @@ function appendFunction(obj)
                 inner.classList.remove('common-hidden');
 
                 obj.f_js = editArea.value;
-                obj.blob = null;
 
                 updateNode(obj, code, "js");
                 
                 expanded = false;
 
-                updateFunc();
+                selectFuncObject(obj, true);
 
                 return false;
-
             } else {
                 editTextNode.nodeValue = "OK";
                 
@@ -205,17 +190,36 @@ function appendFunction(obj)
 
                 return false;
             }
-        }
+        };
 
         container.appendChild(btn);
 
     }
 
-    code.onclick = updateFunc;
+    code.onclick = () => selectFuncObject(obj, false);
 
-    functionNodeCache.push({'Object': obj, 'Container': container, 'ParameterNodes:': paramNodes, 'CodeNode': code, 'EditNode': editArea});
+    functionNodeCache.push({'Object': obj, 'Container': container, 'ParameterNodes': paramNodes, 'CodeNode': code, 'EditNode': editArea});
 
     document.getElementById("functionContainer").appendChild(container);
+}
+
+function selectFuncObject(obj, forceRecalc)
+{
+    selectedFuncObj = functionNodeCache.find(o => o.Object.Name == obj.Name);
+
+    if (forceRecalc) selectedFuncObj.blob = null;
+
+    functionNodeCache.forEach(n => n.Container.classList.remove("selected_func"));
+    mainChart.data.datasets = createDataSet(obj, selectedFuncObj.ParameterNodes.map(n => n.value));
+    mainChart.update();
+    selectedFuncObj.Container.classList.add("selected_func");
+
+    animationStartTicks = new Date().getTime();
+
+    let mp0 = (0 - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
+    let mp1 = (1 - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
+    elem_bobStart.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp0) + "px";
+    elem_bobEnd.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp1) + "px";
 }
 
 function cleanDefaultValue(v) 
@@ -313,9 +317,6 @@ function updateNode(obj, codenode, lang)
     hljs.highlightBlock(codenode);
 }
 
-var bob = document.getElementById("previewAnimationTranslateBobble");
-var container = document.getElementById("previewAnimationTranslate");
-
 function animate() 
 {
     if(selectedFuncObj === null) return;
@@ -323,11 +324,14 @@ function animate()
     if(selectedFuncObj.Object.blob === null) return;
 
     let now = new Date().getTime();
-    let progress = ((now - animationStartTicks) % (ANIMATION_TIME+ANIMATION_COOLDOWN)) / ANIMATION_TIME;
+    let time = ((now - animationStartTicks) % (ANIMATION_TIME + 2*ANIMATION_COOLDOWN));
 
-    if (progress > 1) progress = 0; // cooldown;
+    let progress = (time - ANIMATION_COOLDOWN) / ANIMATION_TIME;
 
-    let mp = selectedFuncObj.Object.blob(progress)
+    if (time <= ANIMATION_COOLDOWN) progress = 0; // cooldown;
+    if (progress > 1) progress = 1;               // cooldown;
 
-    bob.style.left = (5 + (container.offsetWidth - bob.offsetWidth - 10) * mp) + "px";
+    let mp = (selectedFuncObj.Object.blob(progress) - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
+
+    elem_bobAnim.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp) + "px";
 }
