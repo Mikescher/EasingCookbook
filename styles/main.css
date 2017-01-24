@@ -111,6 +111,7 @@ h1 {
 #PATBobbleStart,
 #PATBobbleEnd {
     background: rgba(80, 80, 80, 0.2);
+    border: none;
 }
 
 #prevTransWell {
@@ -130,7 +131,18 @@ h1 {
 .common-visible {}
 
 .edit-textarea {
-    margin: 10px;
+    margin: 0;
+    display:block;
+    width: 100%;
+    padding: 6px;
+}
+
+.selected_func .edit-textarea {
+    border: 2px solid black;
+}
+
+#edit-container {
+    padding: 9px;
 }
 
 .additional_param {
@@ -139,8 +151,6 @@ h1 {
 }
 
 .code pre {
-    background-color: transparent;
-    border: none;
 }
 
 .selected_func .code pre code {
@@ -154,7 +164,10 @@ h1 {
 }
 
 .code > pre {
+    background-color: transparent;
+    border: none;
     margin: 0;
+    padding: 9px;
 }
 
 #header_div {
@@ -172,8 +185,9 @@ h1 {
     border-color: #400 #700 #700 #400;
 }
 
-.function-edit-button {
+#function-edit-button {
     position: absolute;
-    right: 13px;
-    top: 13px;
+    right: 9px;
+    top: 9px;
+    border-radius: 0 0 0 16px;
 }

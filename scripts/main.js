@@ -134,14 +134,20 @@ function appendFunction(obj)
     let editArea = null;
 
     if (obj.Editable) {
+        let editContainer = document.createElement("div");
+        editContainer.className = "common-hidden";
+        editContainer.id="edit-container";
+
         let editArea = document.createElement("textarea");
-        editArea.className="edit-textarea form-control common-hidden";
+        editArea.className="edit-textarea";
         editArea.value = '????';
-        
-        container.appendChild(editArea);
+
+        editContainer.appendChild(editArea);
+        container.appendChild(editContainer);
         
         let btn = document.createElement("a");
-        btn.className="btn btn-default function-edit-button common-visible";
+        btn.className="btn btn-default common-visible";
+        btn.id="function-edit-button";
         btn.href='#';
         btn.onclick = () => { return false; };
         
@@ -158,8 +164,8 @@ function appendFunction(obj)
             if (expanded) {
                 editTextNode.nodeValue = "Edit";
 
-                editArea.classList.add('common-hidden');
-                editArea.classList.remove('common-visible');
+                editContainer.classList.add('common-hidden');
+                editContainer.classList.remove('common-visible');
                 
                 inner.classList.add('common-visible');
                 inner.classList.remove('common-hidden');
@@ -177,11 +183,11 @@ function appendFunction(obj)
                 editTextNode.nodeValue = "OK";
                 
                 editArea.value = obj.f_js;
-                editArea.height = code.height;
-                editArea.width = code.width;
-                
-                editArea.classList.remove('common-hidden');
-                editArea.classList.add('common-visible');
+                editContainer.height = container.offsetHeight;
+                editContainer.width = container.offsetWidth;
+
+                editContainer.classList.remove('common-hidden');
+                editContainer.classList.add('common-visible');
                 
                 inner.classList.remove('common-visible');
                 inner.classList.add('common-hidden');
