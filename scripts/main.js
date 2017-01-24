@@ -1,3 +1,4 @@
+"use strict";
 
 //=================================================================================================
 
@@ -12,11 +13,13 @@ let elem_bobEnd   = document.getElementById("PATBobbleEnd");
 let elem_container = document.getElementById("previewAnimationTranslate");
 
 Chart.defaults.global.animation.duration = 0;
+Chart.defaults.global.legend.display = false;
+Chart.defaults.global.tooltips.enabled = false;
 
 let mainChart = new Chart(document.getElementById("previewChart"),
 {
     type: 'line',
-    data: { cubicInterpolationMode: 'monotone', datasets: createDataSet(FUNCTIONS[0], []) },
+    data: { cubicInterpolationMode: 'monotone', datasets: createDataSet(FUNCTIONS[0], [], null) },
     options: 
     { 
         scales: { xAxes: [{ type: 'linear', position: 'bottom' }] },
@@ -35,9 +38,15 @@ selectFuncObject(FUNCTIONS[1], true);
 //=================================================================================================
 
 
-function createDataSet(obj, params) 
+function createDataSet(obj, params, funcObj)
 {
     let data = [];
+
+
+    if (funcObj != null && funcObj.ErrorArea != null) {
+        funcObj.ErrorArea.classList.remove("common-visible");
+        funcObj.ErrorArea.classList.add("common-hidden");
+    }
 
     if (obj.blob === null)
     {
@@ -48,31 +57,40 @@ function createDataSet(obj, params)
         } catch  (e) {
             console.log(e);
             console.log(fnc);
-            obj.blob = function(t) { return t; }
+            obj.blob = function(t) { return t; };
+            if (funcObj != null && funcObj.ErrorArea != null) {
+                funcObj.ErrorArea.classList.remove("common-hidden");
+                funcObj.ErrorArea.classList.add("common-visible");
+                funcObj.ErrorNode.nodeValue = e.toString();
+            }
+        }
+    }
+
+    try {
+        let min = 0;
+        let max = 1;
+        for (let i=0; i < RESOLUTION; i++) {
+            let xx = i/RESOLUTION;
+            let yy = obj.blob(xx);
+            data.push({x: xx, y: yy});
+            min = Math.min(min, yy);
+            max = Math.max(max, yy);
+        }
+        obj.min = min;
+        obj.max = max;
+
+        return [{ label: obj.Name, data: data, fill: false, borderColor: 'rgba(0, 0, 0, 0.75)', pointRadius: 0, borderWidth: 4 }];
+    } catch  (e) {
+        console.log(e);
+
+        if (funcObj != null && funcObj.ErrorArea != null) {
+            funcObj.ErrorArea.classList.remove("common-hidden");
+            funcObj.ErrorArea.classList.add("common-visible");
+            funcObj.ErrorNode.nodeValue = e.toString();
         }
 
+        return [{ label: obj.Name, data: [{x:0,y:0.5},{x:1,y:0.5}], fill: false, borderColor: 'rgba(0, 0, 0, 0.75)', pointRadius: 0, borderWidth: 4 }];
     }
-
-    let min = 0;
-    let max = 1;
-    for (let i=0; i < RESOLUTION; i++) {
-        let xx = i/RESOLUTION;
-        let yy = obj.blob(xx);
-        data.push({x: xx, y: yy});
-        min = Math.min(min, yy);
-        max = Math.max(max, yy);
-    }
-    obj.min = min;
-    obj.max = max;
-
-    return [{
-        label: obj.Name,
-        data: data,
-        fill: false,
-        borderColor: 'rgba(0, 0, 0, 0.75)',
-        pointRadius: 0,
-        borderWidth: 4,
-    }];
 }
 
 function appendFunction(obj)
@@ -132,6 +150,8 @@ function appendFunction(obj)
     }
 
     let editArea = null;
+    let errorArea = null;
+    let errorNode = null;
 
     if (obj.Editable) {
         let editContainer = document.createElement("div");
@@ -142,8 +162,20 @@ function appendFunction(obj)
         editArea.className="edit-textarea";
         editArea.value = '????';
 
+        errorArea = document.createElement("div");
+        errorArea.className="alert alert-danger common-hidden";
+        errorArea.value = '????';
+
+        errorNode = document.createTextNode('?');
+
+        let errorIcon = document.createElement("span");
+        errorIcon.className = "glyphicon glyphicon-exclamation-sign";
+        errorArea.appendChild(errorIcon);
+        errorArea.appendChild(errorNode);
+
         editContainer.appendChild(editArea);
         container.appendChild(editContainer);
+        container.appendChild(errorArea);
         
         let btn = document.createElement("a");
         btn.className="btn btn-default common-visible";
@@ -204,7 +236,7 @@ function appendFunction(obj)
 
     code.onclick = () => selectFuncObject(obj, false);
 
-    functionNodeCache.push({'Object': obj, 'Container': container, 'ParameterNodes': paramNodes, 'CodeNode': code, 'EditNode': editArea});
+    functionNodeCache.push({'Object': obj, 'Container': container, 'ParameterNodes': paramNodes, 'CodeNode': code, 'EditNode': editArea, 'ErrorArea': errorArea, 'ErrorNode': errorNode});
 
     document.getElementById("functionContainer").appendChild(container);
 }
@@ -213,10 +245,10 @@ function selectFuncObject(obj, forceRecalc)
 {
     selectedFuncObj = functionNodeCache.find(o => o.Object.Name == obj.Name);
 
-    if (forceRecalc) selectedFuncObj.blob = null;
+    if (forceRecalc) obj.blob = null;
 
     functionNodeCache.forEach(n => n.Container.classList.remove("selected_func"));
-    mainChart.data.datasets = createDataSet(obj, selectedFuncObj.ParameterNodes.map(n => n.value));
+    mainChart.data.datasets = createDataSet(obj, selectedFuncObj.ParameterNodes.map(n => n.value), selectedFuncObj);
     mainChart.update();
     selectedFuncObj.Container.classList.add("selected_func");
 
