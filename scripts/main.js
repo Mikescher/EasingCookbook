@@ -1,5 +1,6 @@
 
-var fncDomNode = [];
+var functionNodeCache = [];
+var currentLanguage = "cs";
 
 Chart.defaults.global.animation.duration = 0;
 
@@ -16,7 +17,10 @@ let mainChart = new Chart(document.getElementById("previewChart"),
 
 FUNCTIONS.forEach(appendFunction);
 
-function createDataSet(obj, params) {
+setLang(currentLanguage);
+
+function createDataSet(obj, params) 
+{
     const RESOLUTION = 1000;
 
     let data = [];
@@ -49,9 +53,6 @@ function createDataSet(obj, params) {
 function appendFunction(obj)
 {
     let code = document.createElement("code");
-    code.className = "csharp hljs";
-
-    code.innerHTML = createCode(obj, "cs");
 
     let pre = document.createElement("pre");
     pre.appendChild(code);
@@ -66,13 +67,11 @@ function appendFunction(obj)
     container.className = "codeContainer";
     container.appendChild(inner);
 
-    fncDomNode.push(container);
-
     let paramNodes = [];
 
     let updateFunc = function()
     {
-        fncDomNode.forEach(n => n.classList.remove("selected_func"))
+        functionNodeCache.forEach(n => n.Container.classList.remove("selected_func"))
         mainChart.data.datasets = createDataSet(obj, paramNodes.map(n => n.value));
         mainChart.update();
         container.classList.add("selected_func");
@@ -117,6 +116,8 @@ function appendFunction(obj)
 
     code.onclick = updateFunc;
 
+    functionNodeCache.push({'Object': obj, 'Container': container, 'ParameterNodes:': paramNodes, 'CodeNode': code});
+
     document.getElementById("functionContainer").appendChild(container);
 }
 
@@ -137,6 +138,14 @@ function createCode(obj, lang)
         return "float "+obj.Name+"("+createParamList(obj, lang)+")\n{\n"+indentFunc(obj.f_cs)+"\n}"
     }
     else if (lang == "js")
+    {
+        let compact = "function "+obj.Name+"("+createParamList(obj, lang)+") { return "+obj.f_js+"; }";
+
+        if (compact.length <= 70 && !compact.includes('\n') && !compact.includes('return')) return compact;
+
+        return "function "+obj.Name+"("+createParamList(obj, lang)+") {\n"+indentFunc(obj.f_js)+"\n}"
+    }
+    else if (lang == "es7")
     {
         let compact = "function "+obj.Name+"("+createParamList(obj, lang)+") { return "+obj.f_js+"; }";
 
@@ -171,8 +180,32 @@ function createParamList(obj, lang)
         let a = obj.Parameters.map(p => p[0].split(' ')[1]);
         return [...r, ...a].join(", ")
     }
+    else if (lang == "es7")
+    {
+        let r = ["t"];
+        let a = obj.Parameters.map(p => p[0].split(' ')[1]);
+        return [...r, ...a].join(", ")
+    }
     else
     {
         return "Undefinied"
     }
+}
+
+function setLang(l) 
+{
+    currentLanguage = l;
+    let tabbar = document.getElementById("tabbar");
+    for (let child of tabbar.children) {
+        if (child.id.endsWith(l)) 
+            child.classList.add("active");
+        else
+            child.classList.remove("active");
+    }
+
+    functionNodeCache.forEach(f => f.CodeNode.className = '');
+    functionNodeCache.forEach(f => f.CodeNode.innerHTML = createCode(f.Object, l));
+    functionNodeCache.forEach(f => f.CodeNode.className = HIGHLIGHT_CLASSES[l] + ' hljs');
+
+    functionNodeCache.forEach(f => hljs.highlightBlock(f.CodeNode));
 }

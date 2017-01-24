@@ -1,3 +1,7 @@
+var LANGUAGES = ["cs", "js", "es7"]
+
+var HIGHLIGHT_CLASSES = {'cs':'lang-csharp', 'js':'lang-javascript', 'es7':'lang-javascript', }
+
 var FUNCTIONS =
 [
     {

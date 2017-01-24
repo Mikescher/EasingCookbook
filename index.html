@@ -24,10 +24,19 @@
 <div class="container">
     <div id="header_div">
         <h1>Easing Cookbook</h1>
+    </div> 
+
+    <div class="row">
+        <div class="col-md-6">
+			<ul class="nav nav-tabs" id="tabbar">
+			  <li role="presentation" id="tab_cs"  onclick="setLang('cs'); return false;" ><a href="#">C-Sharp</a></li>
+			  <li role="presentation" id="tab_js"  onclick="setLang('js'); return false;" ><a href="#">Javascript</a></li>
+			  <li role="presentation" id="tab_es7" onclick="setLang('es7'); return false;"><a href="#">ES7</a></li>
+			</ul>
+        </div>
     </div>
 
     <div class="row">
-
         <div class="col-md-6" id="functionContainer">
             <!-- ... -->
         </div>
@@ -44,7 +53,6 @@
 <script src="scripts/chart.js"></script>
 <script src="scripts/definitions.js"></script>
 <script src="scripts/main.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
 
 </body>
 </html>
