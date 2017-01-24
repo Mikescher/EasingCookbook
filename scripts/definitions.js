@@ -7,6 +7,14 @@ const FPS = 30;
 const ANIMATION_TIME     = 1500; // ms
 const ANIMATION_COOLDOWN = 1000; // ms
 
+///
+///  SOURCES
+/// =========
+///
+/// * https://gist.github.com/gre/1650294
+/// * https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
+///
+
 var FUNCTIONS =
 [
     {
@@ -50,7 +58,7 @@ var FUNCTIONS =
         "min": 0,
         "max": 0,
         "f_js":  "t*t",
-        "f_es7": "t**2",
+        "f_es7": "t*t",
         "f_cs":  "t*t",
     },
     {

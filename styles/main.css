@@ -171,7 +171,7 @@ h1 {
 }
 
 #header_div {
-    padding: 40px 15px;
+    padding: 10px 5px;
     text-align: center;
 }
 
@@ -190,4 +190,16 @@ h1 {
     right: 9px;
     top: 9px;
     border-radius: 0 0 0 16px;
+}
+
+#functionContainer {
+    overflow-y: auto;
+}
+
+@media(min-width: 992px)
+{
+    body {height: 100vh;}
+    .container {height: 100%;}
+    #contentRow {height: calc(100% - 140px); }
+    #functionContainer {height: 100%; }
 }

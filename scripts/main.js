@@ -242,7 +242,7 @@ function createCode(obj, lang)
     {
         let compact = "float "+obj.Name+"("+createParamList(obj, lang)+") => "+obj.f_cs+";";
 
-        if (compact.length <= 70 && !compact.includes('\n') && !compact.includes('return')) return compact;
+        if (compact.length <= 70 && !compact.includes('\n') && !obj.f_cs.includes('return')) return compact;
 
         return "float "+obj.Name+"("+createParamList(obj, lang)+")\n{\n"+indentFunc(obj.f_cs)+"\n}"
     }
@@ -250,17 +250,17 @@ function createCode(obj, lang)
     {
         let compact = "function "+obj.Name+"("+createParamList(obj, lang)+") { return "+obj.f_js+"; }";
 
-        if (compact.length <= 70 && !compact.includes('\n') && !compact.includes('return')) return compact;
+        if (compact.length <= 70 && !compact.includes('\n') && !obj.f_js.includes('return')) return compact;
 
         return "function "+obj.Name+"("+createParamList(obj, lang)+") {\n"+indentFunc(obj.f_js)+"\n}"
     }
     else if (lang == "es7")
     {
-        let compact = "function "+obj.Name+"("+createParamList(obj, lang)+") { return "+obj.f_js+"; }";
+        let compact = "function "+obj.Name+"("+createParamList(obj, lang)+") { return "+obj.f_es7+"; }";
 
-        if (compact.length <= 70 && !compact.includes('\n') && !compact.includes('return')) return compact;
+        if (compact.length <= 70 && !compact.includes('\n') && !obj.f_es7.includes('return')) return compact;
 
-        return "function "+obj.Name+"("+createParamList(obj, lang)+") {\n"+indentFunc(obj.f_js)+"\n}"
+        return "function "+obj.Name+"("+createParamList(obj, lang)+") {\n"+indentFunc(obj.f_es7)+"\n}"
     }
     else
     {
