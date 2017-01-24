@@ -94,8 +94,8 @@ var FUNCTIONS =
     {
         "Name": "FunctionEaseOutElastic",
         "Parameters": [["float power", "0.3f"], ["float bounces", "2"]],
-        "f_js":  "t *= 0.175f * bounces + 0.0875f;\nlet sb = Math.Sin((t - power / 4) * (2*Math.PI)/power);\nreturn sb * Math.Pow(2, -10 * t) + 1;",
-        "f_es7": "t *= 0.175f * bounces + 0.0875f;\nlet sb = Math.Sin((t - power / 4) * (2*Math.PI)/power);\nreturn sb * Math.Pow(2, -10 * t) + 1;",
+        "f_js":  "t *= 0.175 * bounces + 0.0875;\nlet sb = Math.sin((t - power / 4) * (2*Math.PI)/power);\nreturn sb * Math.pow(2, -10 * t) + 1;",
+        "f_es7": "t *= 0.175 * bounces + 0.0875;\nlet sb = Math.sin((t - power / 4) * (2*Math.PI)/power);\nreturn sb * Math.pow(2, -10 * t) + 1;",
         "f_cs":  "t *= 0.175f * bounces + 0.0875f;\nvar sb = Math.Sin((t - power / 4) * (2*Math.PI)/power);\nreturn sb * Math.Pow(2, -10 * t) + 1;",
     },
 ];

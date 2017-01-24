@@ -3,43 +3,41 @@ var fncDomNode = [];
 
 Chart.defaults.global.animation.duration = 0;
 
-let mainChart = new Chart(document.getElementById("previewChart"), {
+let mainChart = new Chart(document.getElementById("previewChart"), 
+{
     type: 'line',
-    data: {
-        cubicInterpolationMode: 'monotone',
-        datasets: createDataSet(FUNCTIONS[0])
-    },
-    options: {
-        scales: {
-            xAxes: [{
-                type: 'linear',
-                position: 'bottom'
-            }]
-        },
-        animation: {
-            animation : false,
-            animateScale: false,
-            animateRotate: false,
-        }
+    data: { cubicInterpolationMode: 'monotone', datasets: createDataSet(FUNCTIONS[0], []) },
+    options: 
+    { 
+        scales: { xAxes: [{ type: 'linear', position: 'bottom' }] },
+        animation: { animation : false, animateScale: false, animateRotate: false },
     }
 });
 
 FUNCTIONS.forEach(appendFunction);
 
-
-function createDataSet(obj) {
+function createDataSet(obj, params) {
     const RESOLUTION = 1000;
-
-    let compiled = eval('(function (t){return ' + obj.f_js + ';})')
 
     let data = [];
 
-    for (let i=0; i < RESOLUTION; i++) {
-        data.push({x: i/RESOLUTION, y: compiled(i/RESOLUTION)});
+    let fnc = '('+createCode(obj, "js")+')';
+    try {
+        let compiled = eval(fnc);
+        
+        
+        for (let i=0; i < RESOLUTION; i++) {
+            data.push({x: i/RESOLUTION, y: compiled.apply(this, [i/RESOLUTION, ...params])});
+        }
+    } catch  (e) {
+        console.log(e);
+        console.log(fnc);
+        data.push({x: 0, y: 0.5});
+        data.push({x: 1, y: 0.5});
     }
 
     return [{
-        label: obj.f_es7,
+        label: obj.Name,
         data: data,
         fill: false,
         borderColor: 'rgba(0, 0, 0, 0.75)',
@@ -70,15 +68,62 @@ function appendFunction(obj)
 
     fncDomNode.push(container);
 
-    code.onclick = function()
+    let paramNodes = [];
+
+    let updateFunc = function()
     {
         fncDomNode.forEach(n => n.classList.remove("selected_func"))
-        mainChart.data.datasets = createDataSet(obj);
+        mainChart.data.datasets = createDataSet(obj, paramNodes.map(n => n.value));
         mainChart.update();
         container.classList.add("selected_func");
     };
 
+    for(let param of obj.Parameters) {
+
+        let lbl = document.createElement("span");
+        lbl.className = 'input-group-addon';
+        lbl.innerHTML = param[0].split(' ')[1];
+
+        let box = document.createElement("input");
+        box.setAttribute('type', 'text')
+        box.className = "form-control";
+        if (param[1] != "") box.setAttribute('value', cleanDefaultValue(param[1]))
+        box.innerHTML = param[0].split(' ')[1];
+
+        let subcontainer = document.createElement("div");
+        subcontainer.className = "additional_param";
+
+        let inputgroup = document.createElement("div");
+        inputgroup.className = "input-group";
+
+        inputgroup.appendChild(lbl);
+        inputgroup.appendChild(box);
+
+        if (param[1] != "" && cleanDefaultValue(param[1]) != param[1]) {
+            let suffix = document.createElement("span")
+            suffix.className = 'input-group-addon';
+            suffix.innerHTML = param[1].slice(-1);
+            inputgroup.appendChild(suffix);
+        }
+        
+        subcontainer.appendChild(inputgroup);
+
+        paramNodes.push(box);
+
+        box.oninput = updateFunc;
+
+        container.appendChild(subcontainer);
+    }
+
+    code.onclick = updateFunc;
+
     document.getElementById("functionContainer").appendChild(container);
+}
+
+function cleanDefaultValue(v) 
+{
+    while (v.length > 1 && (v.endsWith('f') || v.endsWith('i') || v.endsWith('d'))) v = v.slice(0, -1);
+    return v;
 }
 
 function createCode(obj, lang)
@@ -123,7 +168,7 @@ function createParamList(obj, lang)
     else if (lang == "js")
     {
         let r = ["t"];
-        let a = obj.Parameters.map(p => (p.length > 1) ? (p[0].split(' ')[1]+"=" + p[1]) :(p[0].split(' ')[1]));
+        let a = obj.Parameters.map(p => p[0].split(' ')[1]);
         return [...r, ...a].join(", ")
     }
     else

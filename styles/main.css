@@ -84,12 +84,16 @@ h1 {
 }
 
 .codeContainer {
-    display:flex;
-    justify-content: center;
+
 }
 
 .code {
     width: 100%;
+}
+
+.additional_param {
+    width: 100%;
+    padding: 0px 9.5px 9.5px 9.5px;
 }
 
 .code pre {
