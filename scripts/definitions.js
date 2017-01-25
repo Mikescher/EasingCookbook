@@ -11,8 +11,8 @@ const ANIMATION_COOLDOWN = 1000; // ms
 ///  SOURCES
 /// =========
 ///
-/// * https://gist.github.com/gre/1650294
-/// * https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
+/// * [bezier-easing](https://gist.github.com/gre/1650294)
+/// * [Robert Penner's easing equations](https://github.com/danro/jquery-easing/blob/master/jquery.easing.js)
 ///
 
 var FUNCTIONS =

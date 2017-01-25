@@ -96,6 +96,7 @@ function createDataSet(obj, params, funcObj)
 function appendFunction(obj)
 {
     let code = document.createElement("code");
+    code.style.cursor = 'pointer';
 
     let pre = document.createElement("pre");
     pre.appendChild(code);
@@ -104,11 +105,14 @@ function appendFunction(obj)
     inner.className = "code";
     inner.appendChild(pre);
 
-    code.style.cursor = 'pointer';
+
+    let funcborder = document.createElement("div");
+    funcborder.className = "funcBorder";
+    funcborder.appendChild(inner);
 
     let container = document.createElement("div");
     container.className = "codeContainer";
-    container.appendChild(inner);
+    container.appendChild(funcborder);
 
     let paramNodes = [];
 
@@ -146,7 +150,7 @@ function appendFunction(obj)
 
         box.oninput = () => selectFuncObject(obj, true);
 
-        container.appendChild(subcontainer);
+        funcborder.appendChild(subcontainer);
     }
 
     let editArea = null;
@@ -174,7 +178,7 @@ function appendFunction(obj)
         errorArea.appendChild(errorNode);
 
         editContainer.appendChild(editArea);
-        container.appendChild(editContainer);
+        funcborder.appendChild(editContainer);
         container.appendChild(errorArea);
         
         let btn = document.createElement("a");
@@ -215,8 +219,8 @@ function appendFunction(obj)
                 editTextNode.nodeValue = "OK";
                 
                 editArea.value = obj.f_js;
-                editContainer.height = container.offsetHeight;
-                editContainer.width = container.offsetWidth;
+                editContainer.height = funcborder.offsetHeight;
+                editContainer.width = funcborder.offsetWidth;
 
                 editContainer.classList.remove('common-hidden');
                 editContainer.classList.add('common-visible');

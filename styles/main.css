@@ -120,6 +120,7 @@ h1 {
 
 .codeContainer {
     position: relative;
+    margin: 9px;
 }
 
 .code {
@@ -137,13 +138,7 @@ h1 {
     padding: 6px;
 }
 
-.selected_func .edit-textarea {
-    border: 2px solid black;
-}
-
-#edit-container {
-    padding: 9px;
-}
+#edit-container { }
 
 .additional_param {
     width: 100%;
@@ -153,21 +148,10 @@ h1 {
 .code pre {
 }
 
-.selected_func .code pre code {
-    border: 2px solid black;
-}
-
-.selected_func {
-    background-color: rgba(51, 153, 255, 0.3333);
-    margin:  -1px;
-    padding: -1px;
-}
-
 .code > pre {
     background-color: transparent;
     border: none;
     margin: 0;
-    padding: 9px;
 }
 
 #header_div {
@@ -180,9 +164,7 @@ h1 {
     padding: 1em;
     background: #500;
     color: #B99;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #400 #700 #700 #400;
+    border: none
 }
 
 #function-edit-button {
@@ -190,6 +172,11 @@ h1 {
     right: 9px;
     top: 9px;
     border-radius: 0 0 0 16px;
+}
+
+.selected_func #function-edit-button {
+    right: 8px;
+    top: 10px;
 }
 
 #functionContainer {
@@ -203,3 +190,24 @@ h1 {
     #contentRow {height: calc(100% - 140px); min-height: 382px; }
     #functionContainer {height: 100%; }
 }
+
+.funcBorder {
+    background: #eaeef3;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #400 #700 #700 #400;
+}
+
+.selected_func .funcBorder {
+    border: 2px solid black;
+    margin: -1px;
+}
+
+.selected_func .funcBorder,
+.selected_func .funcBorder .hljs {
+    background: #cbd5e1;
+}
+
+.selected_func { }
+
+.codeContainer .alert { margin: 10px; }
