@@ -32,6 +32,7 @@ FUNCTIONS.forEach(appendFunction);
 setLang(currentLanguage);
 
 window.setInterval(animate, 1000/FPS);
+window.onresize = () => repositionBobbles();
 
 selectFuncObject(FUNCTIONS[1], true);
 
@@ -258,10 +259,7 @@ function selectFuncObject(obj, forceRecalc)
 
     animationStartTicks = new Date().getTime();
 
-    let mp0 = (0 - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
-    let mp1 = (1 - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
-    elem_bobStart.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp0) + "px";
-    elem_bobEnd.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp1) + "px";
+    repositionBobbles();
 }
 
 function cleanDefaultValue(v) 
@@ -376,4 +374,12 @@ function animate()
     let mp = (selectedFuncObj.Object.blob(progress) - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
 
     elem_bobAnim.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp) + "px";
+}
+
+function repositionBobbles() {
+    let mp0 = (0 - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
+    let mp1 = (1 - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
+
+    elem_bobStart.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp0) + "px";
+    elem_bobEnd.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp1) + "px";
 }
