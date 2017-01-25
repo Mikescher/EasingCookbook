@@ -19,6 +19,7 @@ var FUNCTIONS =
 [
     {
         "Name": "Custom",
+        "Source": "#",
         "Parameters": [],
         "Editable": true,
         "blob": null,
@@ -30,6 +31,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionJump",
+        "Source": null,
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -41,6 +43,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseLinear",
+        "Source": null,
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -52,6 +55,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInQuad",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -63,6 +67,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutQuad",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -74,6 +79,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInCubic",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -85,6 +91,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutCubic",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -96,6 +103,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutCubic",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -107,6 +115,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInQuart",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -118,6 +127,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutQuart",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -129,6 +139,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutQuart",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -140,6 +151,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInQuint",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "min": 0,
@@ -150,6 +162,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutQuint",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -161,6 +174,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutQuint",
+        "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -172,6 +186,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutElastic",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float power", "0.3f"], ["float bounces", "2"]],
         "Editable": false,
         "blob": null,
@@ -183,6 +198,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInSine",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -194,6 +210,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutSine",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -205,6 +222,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutSine",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -216,6 +234,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInExpo",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float p", "10f"]],
         "Editable": false,
         "blob": null,
@@ -227,6 +246,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutExpo",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float p", "10"]],
         "Editable": false,
         "blob": null,
@@ -238,6 +258,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutExpo",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float p", "10"]],
         "Editable": false,
         "blob": null,
@@ -249,6 +270,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInCirc",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -260,6 +282,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInCirc",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -271,6 +294,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutCirc",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -282,6 +306,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInElastic",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float p", "0.3f"]],
         "Editable": false,
         "blob": null,
@@ -293,6 +318,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutElastic",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float p", "0.3f"]],
         "Editable": false,
         "blob": null,
@@ -304,6 +330,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutElastic",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float p", "0.45f"]],
         "Editable": false,
         "blob": null,
@@ -315,6 +342,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInBack",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float s", "1.70158f"]],
         "Editable": false,
         "blob": null,
@@ -326,6 +354,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutBack",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float s", "1.70158f"]],
         "Editable": false,
         "blob": null,
@@ -337,6 +366,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutBack",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [["float s", "2.59491f"]],
         "Editable": false,
         "blob": null,
@@ -348,6 +378,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInBounce",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -359,6 +390,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseOutBounce",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,
@@ -370,6 +402,7 @@ var FUNCTIONS =
     },
     {
         "Name": "FunctionEaseInOutBounce",
+        "Source": "http://robertpenner.com/easing/",
         "Parameters": [],
         "Editable": false,
         "blob": null,

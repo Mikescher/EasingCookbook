@@ -237,6 +237,16 @@ function appendFunction(obj)
 
         container.appendChild(btn);
 
+    } else if (obj.Source) {
+        let reflink = document.createElement("a");
+        reflink.id="reference-link";
+        reflink.href=obj.Source;
+        reflink.target = "_blank";
+
+        let refIcon = document.createElement("span");
+        refIcon.className = "glyphicon glyphicon-qrcode";
+        reflink.appendChild(refIcon);
+        funcborder.appendChild(reflink);
     }
 
     code.onclick = () => selectFuncObject(obj, false);
@@ -376,7 +386,8 @@ function animate()
     elem_bobAnim.style.left = (5 + (elem_container.offsetWidth - elem_bobAnim.offsetWidth - 10) * mp) + "px";
 }
 
-function repositionBobbles() {
+function repositionBobbles()
+{
     let mp0 = (0 - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
     let mp1 = (1 - selectedFuncObj.Object.min) / (selectedFuncObj.Object.max - selectedFuncObj.Object.min);
 

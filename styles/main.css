@@ -211,3 +211,14 @@ h1 {
 .selected_func { }
 
 .codeContainer .alert { margin: 10px; }
+
+#reference-link {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #333;
+}
+
+#reference-link:hover {
+    color: #337ab7;
+}
