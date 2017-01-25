@@ -248,7 +248,7 @@ function selectFuncObject(obj, forceRecalc)
     if (forceRecalc) obj.blob = null;
 
     functionNodeCache.forEach(n => n.Container.classList.remove("selected_func"));
-    mainChart.data.datasets = createDataSet(obj, selectedFuncObj.ParameterNodes.map(n => n.value), selectedFuncObj);
+    mainChart.data.datasets = createDataSet(obj, selectedFuncObj.ParameterNodes.map(n => parseFloat(n.value)), selectedFuncObj);
     mainChart.update();
     selectedFuncObj.Container.classList.add("selected_func");
 

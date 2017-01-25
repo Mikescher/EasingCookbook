@@ -200,6 +200,6 @@ h1 {
 {
     body {height: 100vh;}
     .container {height: 100%;}
-    #contentRow {height: calc(100% - 140px); }
+    #contentRow {height: calc(100% - 140px); min-height: 382px; }
     #functionContainer {height: 100%; }
 }
