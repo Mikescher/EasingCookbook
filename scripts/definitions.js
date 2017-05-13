@@ -66,6 +66,18 @@ var FUNCTIONS =
         "f_cs":  "t*t",
     },
     {
+        "Name": "FunctionEaseOutQuad",
+        "Source": "https://gist.github.com/gre/1650294",
+        "Parameters": [],
+        "Editable": false,
+        "blob": null,
+        "min": 0,
+        "max": 1,
+        "f_js":  "t*(2-t)",
+        "f_es7": "t*(2-t)",
+        "f_cs":  "t*(2-t)",
+    },
+    {
         "Name": "FunctionEaseInOutQuad",
         "Source": "https://gist.github.com/gre/1650294",
         "Parameters": [],
